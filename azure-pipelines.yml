@@ -16,19 +16,29 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
+  displayName: "Instalando Nuget"
+
+- task: UseDotNet@2
+  displayName: "Instalando .NetCore 3.1"
+  inputs:
+    packageType: 'sdk'
+    version: '3.1'
 
 - task: DotNetCoreCLI@2
+  displayName: "Restaurando packages"
   inputs:
     command: 'restore'
     feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
+  displayName: "Publish local"
   inputs:
     command: 'publish'
     publishWebProjects: true
     zipAfterPublish: false
 
 - task: NuGetCommand@2
+  displayName: "Publish servidor"
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
